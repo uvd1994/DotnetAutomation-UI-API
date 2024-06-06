@@ -1,0 +1,5 @@
+﻿{
+  "Timeout": "60",
+  "PollingTimeout": "500",
+  "URL": "https://bar.bagconsult.eu/"
+}
