@@ -9,13 +9,13 @@ using TestProject.Views;
 
 namespace TestProject
 {
-    public class Tests : BaseTest
+    public class UITests : BaseTest
     {
         [Test]
-        public void Dutta()
+        public void EndToEndTest()
         {
             var HomeView = GetViewObject<BobchosBarHomeView>();
-            HomeView.NavBarPurchaseLink().Click(); ;
+            HomeView.NavBarPurchaseLink().Click(); 
 
 
 

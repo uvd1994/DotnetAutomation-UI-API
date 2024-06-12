@@ -4,6 +4,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -45,6 +46,7 @@ namespace TestFramework.Core
         }
         public void InitDriver()
         {
+            //Driver init
             InitProcess();
         }
         private static void InitProcess()
@@ -72,6 +74,34 @@ namespace TestFramework.Core
             var lst = ele.Select(e => new WebElementWrapper((WebElement)e)).ToList();
             return lst;
         }
+
+        public static TimeSpan Timeout => TimeSpan.FromSeconds((double)Resources.GetConfigData()["Timeout"]);
+        public bool Exists(By by)
+        {
+            var startTime = DateTime.Now;
+
+            var elems = new ReadOnlyCollection<IWebElement>(new List<IWebElement>());
+
+            while(DateTime.Now.Subtract(startTime) < Timeout)
+            {
+                try
+                {
+                    elems = _driver.FindElements(by);
+                }
+                catch
+
+                { return false; }
+                
+                if (elems.FirstOrDefault()!.Displayed)
+                {
+                    break;
+                }
+
+            }
+            return (elems.Count>0);
+        }
+
+
     }
 
 

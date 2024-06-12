@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using OpenQA.Selenium.Support.UI;
 
 namespace TestFramework.Core
 {
@@ -32,16 +33,17 @@ namespace TestFramework.Core
             }
         }
 
-
         public WebElementWrapper Click()
         {
             InitWebElement();
             _element.Click();
             return this;
         }
+
         public void SendKeys(string text)
         {
             InitWebElement();
+            _element.Click();
             _element.SendKeys(text);
         }
         public string GetText()
@@ -50,7 +52,19 @@ namespace TestFramework.Core
             return _element.Text;
         }
 
-  
+        public bool Exists()
+        {
+            InitWebElement();
+            return Driver.Instance().Exists(_query);
+        }
+
+        public void SelectDropdown(int index)
+        {
+            SelectElement dropdown = new SelectElement(_element);
+            dropdown.SelectByIndex(index);
+
+        }
+
 
 
     }
