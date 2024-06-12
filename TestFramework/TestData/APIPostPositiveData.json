@@ -1,9 +1,13 @@
 ﻿{
-  "Id": 1,
-  "TypeId": 1,
+
   "Quantity": 34,
+
   "Name": "ff",
-  "Email": "chuvdutta1994@gmail.com",
+
+  "Email": "pop",
+
   "Price": 115.60,
+
   "Date": "2024-06-06T16:27:42"
-}
+
+} 

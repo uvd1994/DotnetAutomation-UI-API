@@ -44,6 +44,21 @@ namespace TestFramework.Core
             _wait.Timeout = TimeSpan.FromSeconds(timeout);
             return _wait.Until(e => (WebElement)e.FindElement(by));
         }
+        public IAlert WaitForAlert()
+        {
+            return _wait.Until(_driver =>
+            {
+                try
+                {
+                    return _driver.SwitchTo().Alert();
+                }
+                catch(NoAlertPresentException)
+                {
+                    return null;
+                }
+            });
+   
+        }
         public void InitDriver()
         {
             //Driver init
@@ -68,7 +83,7 @@ namespace TestFramework.Core
             var ele = Driver.Instance().Get().FindElement(by);
             return new WebElementWrapper((WebElement)ele);
         }
-        public static List<WebElementWrapper> FindElements(By by)
+        public List<WebElementWrapper> FindElements(By by)
         {
             var ele = Driver.Instance().Get().FindElements(by);
             var lst = ele.Select(e => new WebElementWrapper((WebElement)e)).ToList();

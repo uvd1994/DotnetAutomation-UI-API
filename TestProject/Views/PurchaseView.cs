@@ -20,6 +20,9 @@ namespace TestProject.Views
         [Element("Size")]
         public WebElementWrapper Size() => new(By.XPath("//*[@*='Size']"));
 
+        [Element("Size")]
+        public WebElementWrapper Price() => new(By.XPath("//*[@*='Price']"));
+
         [Element("Name")]
         public WebElementWrapper Name() => new(By.XPath("//*[@*='Name']"));
 
@@ -32,9 +35,12 @@ namespace TestProject.Views
         [Element("IsAdult")]
         public WebElementWrapper IsAdult() => new(By.XPath("//*[@*='IsAdult']"));
 
-        [Element("btnOrder")]
-        public WebElementWrapper btnOrder() => new(By.XPath("//*[@*='btnOrder']"));
+        [Element("Order Button")]
+        public WebElementWrapper OrderButton() => new(By.XPath("//*[@*='btnOrder']"));
 
+        [Element("Continue Shopping")]
+        public WebElementWrapper ContinueShopping() => new(By.XPath("//*[contains(text(),'Continue shopping')]"));
 
+ 
     }
 }
