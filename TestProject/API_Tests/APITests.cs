@@ -14,6 +14,7 @@ using TestFramework.API;
 using TestFramework.Core;
 using TestFramework.Exceptions;
 using TestFramework.Models;
+using TestFramework.Utilities;
 using TestProject.UI_Tests;
 using TestProject.Views;
 
@@ -67,7 +68,7 @@ namespace TestProject
             request.AddHeader("Accept", "application/json");
             request.AddJsonBody(inputJson);
 
-            var response = APIHelper.ApiClient().ExecutePost<List<ResponseModel>>(request);
+            var response = APIHelper.ApiClient().ExecutePost<ResponseModel>(request);
             if (response.StatusCode != HttpStatusCode.Created)
             {
                 throw new AutomationException("post failed");
@@ -75,9 +76,9 @@ namespace TestProject
             var respDataDeserialised = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
             request = new RestRequest("https://bar.bagconsult.eu/api/Order"+"/"+ respDataDeserialised.Id);
 
-            response = APIHelper.ApiClient().ExecuteGet<List<ResponseModel>>(request);
+            var getResponse = APIHelper.ApiClient().ExecuteGet<ResponseModel>(request);
 
-            if (response.StatusCode != HttpStatusCode.OK)
+            if (getResponse.StatusCode != HttpStatusCode.OK)
             {
                 throw new AutomationException("get failed after post creation API");
             }
@@ -109,6 +110,41 @@ namespace TestProject
             {
                 throw new AutomationException("delete failed after post creation API because" + deleteResponse.StatusCode + " is received from delete api");
             }
+        }
+
+        [Test]
+        public void APIPostTestWithComplexPayloadApproachSubSequentGetTest()
+        {
+            var path = AppDomain.CurrentDomain.BaseDirectory;
+            string jsonPath = path.Replace("TestProject\\TestProject\\bin\\Debug\\net6.0\\", "TestProject\\TestFramework\\TestData\\inputjsonpostapi.json");
+            var inputJson = File.ReadAllText(jsonPath);
+
+            var inputObject = JsonUtility.ReadJSON<ResponseModel>(jsonPath);
+
+            var request = new RestRequest("https://bar.bagconsult.eu/api/Order");
+            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("Accept", "application/json");
+            request.AddBody(inputObject);
+
+            var response = APIHelper.ApiClient().ExecutePost<List<ResponseModel>>(request);
+            if (response.StatusCode != HttpStatusCode.Created)
+            {
+                throw new AutomationException("post failed");
+            }
+            var respDataDeserialised = JsonConvert.DeserializeObject<ResponseModel>(response.Content);
+            request = new RestRequest("https://bar.bagconsult.eu/api/Order" + "/" + respDataDeserialised.Id);
+
+            var getResponse = APIHelper.ApiClient().ExecuteGet<ResponseModel>(request);
+
+            if (getResponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new AutomationException("get failed after post creation API");
+            }
+            
+            // Input Data Validations with Post API created data
+            Assert.AreEqual(getResponse.Data.Name, inputObject.Name);
+            Assert.AreEqual(getResponse.Data.Quantity, inputObject.Quantity);
+            Assert.AreEqual(getResponse.Data.Email, inputObject.Email);
         }
 
     }
